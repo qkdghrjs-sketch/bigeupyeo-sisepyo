@@ -4,56 +4,128 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>비급여 가격이 바뀌면 10일 안에 — 변경보고 따라 하기</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
-:root{--ink:#1a1d21;--sub:#5a6170;--line:#d8dce2;--brand:#123b6d;--warn:#c0392b;--ok:#1a7f4b}
-*{box-sizing:border-box}
-body{margin:0;background:#eef0f3;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Malgun Gothic","맑은 고딕",sans-serif;font-size:13px;line-height:1.55}
-.topbar{background:var(--brand);color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-.topbar b{font-size:16px}
-.topbar button{background:#fff;color:var(--brand);border:0;border-radius:6px;padding:8px 16px;font-weight:700;cursor:pointer;font-family:inherit;font-size:13px}
-.page{background:#fff;width:210mm;min-height:297mm;margin:16px auto;padding:14mm 13mm;page-break-after:always;position:relative}
+:root{
+  --bg:#f4f5f7;--card:#fff;--ink:#0f1115;--ink-2:#4b5361;--ink-3:#8a919e;
+  --line:#e6e8ec;--line-2:#f0f1f4;--accent:#2f5bff;--accent-soft:#eaefff;
+  --warn:#c8372b;--warn-bg:#fdecea;--warn-line:#f6cdc8;
+  --ok:#0e8f55;--ok-bg:#e6f7ef;
+  --sans:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  --shadow:0 1px 2px rgba(16,20,28,.04),0 10px 30px -14px rgba(16,20,28,.18);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);font-size:13.5px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;word-break:keep-all;overflow-wrap:break-word}
+a{color:inherit;text-decoration:none}
+.num{font-variant-numeric:tabular-nums}
+
+.topbar{
+  position:sticky;top:0;z-index:50;
+  background:linear-gradient(135deg,#131a2b 0%,#1d3a6e 70%,#2f5bff 150%);
+  color:#fff;padding:15px 22px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
+}
+.topbar b{font-size:16px;font-weight:800;letter-spacing:-.4px}
+.topbar .sub{display:block;font-size:11.5px;color:rgba(255,255,255,.65);font-weight:500;margin-top:2px;letter-spacing:0}
+.topbar span.grp{display:flex;gap:8px}
+.topbar a,.topbar button{
+  background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.22);border-radius:10px;
+  padding:9px 16px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;transition:background .15s;
+}
+.topbar a:hover,.topbar button:hover{background:rgba(255,255,255,.26)}
+.topbar a.pri{background:#fff;color:#1d3a6e;border-color:#fff}
+
+.page{
+  background:var(--card);width:210mm;min-height:297mm;margin:20px auto;padding:15mm 14mm 17mm;
+  border-radius:14px;box-shadow:var(--shadow);page-break-after:always;position:relative;
+}
 .page:last-child{page-break-after:auto}
-h1{font-size:20px;margin:0 0 2px;color:var(--brand);letter-spacing:-.5px}
-.sub{font-size:12px;color:var(--sub);margin-bottom:12px}
-h2{font-size:14px;margin:11px 0 5px;padding-left:8px;border-left:4px solid var(--brand);line-height:1.3}
-h3{font-size:13px;margin:9px 0 4px;color:#25405f}
-p{margin:4px 0}
-.box{border:1px solid var(--line);border-radius:7px;padding:8px 11px;margin:6px 0;font-size:12.2px;line-height:1.5}
-.box.red{background:#fff5f4;border-color:#f0c7c2}
-.box.blue{background:#f2f6fc;border-color:#ccdaee}
-.box.gray{background:#f6f7f9}
-.box b.hl{color:var(--warn)}
-ol,ul{margin:4px 0;padding-left:19px}
-li{margin:2px 0}
-.k{display:inline-block;background:#25405f;color:#fff;border-radius:4px;padding:0 6px;font-size:11.5px;font-weight:700;margin:0 1px}
-.step{display:flex;gap:9px;margin:8px 0;align-items:flex-start}
-.no{flex:0 0 22px;height:22px;border-radius:50%;background:var(--brand);color:#fff;font-weight:700;font-size:12.5px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+
+.pg-no{
+  position:absolute;right:14mm;top:13mm;font-size:11px;font-weight:800;color:var(--ink-3);
+  background:#f3f4f7;border-radius:999px;padding:3px 11px;
+}
+h1{font-size:23px;font-weight:800;letter-spacing:-.8px;line-height:1.25}
+.sub{font-size:12px;color:var(--ink-3);margin-top:4px;margin-bottom:14px}
+h2{
+  font-size:15.5px;font-weight:800;letter-spacing:-.4px;margin:18px 0 8px;
+  display:flex;align-items:center;gap:8px;
+}
+h2::before{content:"";width:4px;height:16px;border-radius:99px;background:var(--accent);flex:0 0 4px}
+p{margin:5px 0}
+
+.box{border:1px solid var(--line);border-radius:12px;padding:12px 15px;margin:10px 0;font-size:12.6px;line-height:1.65;background:#fafbfc}
+.box.red{background:var(--warn-bg);border-color:var(--warn-line);color:#8f2b21}
+.box.blue{background:#f1f5ff;border-color:#dbe4ff;color:#1e3a8a}
+.box.gray{background:#f7f8fa;border-color:var(--line-2);color:var(--ink-2)}
+.box b.hl{color:var(--warn);font-weight:800}
+.box b{font-weight:800}
+
+ul,ol{margin:6px 0;padding-left:20px}
+li{margin:3px 0}
+li::marker{color:var(--ink-3)}
+
+.k{display:inline-block;background:var(--ink);color:#fff;border-radius:6px;padding:1px 7px;font-size:11.5px;font-weight:700;margin:0 1px;letter-spacing:-.2px}
+
+.step{display:flex;gap:12px;margin:12px 0;align-items:flex-start}
+.no{
+  flex:0 0 26px;height:26px;border-radius:9px;background:var(--accent);color:#fff;
+  font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;margin-top:1px;
+  box-shadow:0 3px 10px -4px rgba(47,91,255,.8);
+}
 .step .bd{flex:1;min-width:0}
-figure{margin:5px 0 0;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#fafbfc}
+
+figure{margin:8px 0 0;border:1px solid var(--line);border-radius:11px;overflow:hidden;background:#fbfcfd}
 figure img{width:100%;display:block;max-height:41mm;object-fit:contain;object-position:top}
 .two figure img{max-height:33mm}
-figcaption{font-size:10.2px;color:var(--sub);padding:3px 7px;background:#f6f7f9;border-top:1px solid var(--line);line-height:1.35}
-table{width:100%;border-collapse:collapse;font-size:11.8px;margin:5px 0}
-th,td{border:1px solid var(--line);padding:3.5px 7px;text-align:left;vertical-align:top}
-th{background:#eef1f5;font-weight:700;white-space:nowrap}
-.foot{position:absolute;left:13mm;right:13mm;bottom:8mm;border-top:1px solid var(--line);padding-top:5px;font-size:10px;color:var(--sub);display:flex;justify-content:space-between}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+figcaption{font-size:10.5px;color:var(--ink-3);padding:6px 10px;background:#f7f8fa;border-top:1px solid var(--line-2);line-height:1.45}
+figcaption b{color:var(--ink-2);font-weight:700}
+
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:12.2px;margin:8px 0;
+  border:1px solid var(--line-2);border-radius:11px;overflow:hidden}
+th,td{padding:7px 11px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line-2)}
+th{background:#f7f8fa;font-weight:700;color:var(--ink-3);font-size:11.5px;white-space:nowrap}
+tr:last-child td,tr:last-child th{border-bottom:0}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+
+.foot{
+  position:absolute;left:14mm;right:14mm;bottom:9mm;border-top:1px solid var(--line-2);
+  padding-top:7px;font-size:10px;color:var(--ink-3);display:flex;justify-content:space-between;gap:10px;
+}
+
 @media print{
- body{background:#fff}
- .topbar{display:none}
- .page{margin:0;width:auto;min-height:auto;padding:0;box-shadow:none}
- @page{size:A4;margin:12mm}
+  body{background:#fff;font-size:10px}
+  .topbar{display:none}
+  .page{margin:0;width:auto;min-height:auto;padding:0;box-shadow:none;border-radius:0}
+  .pg-no{display:none}
+  h1{font-size:15px}
+  .sub{font-size:8.6px;margin-bottom:7px}
+  h2{font-size:11.5px;margin:10px 0 4px}
+  h2::before{height:12px}
+  .box{font-size:8.6px;padding:7px 10px;margin:6px 0;border-radius:8px;line-height:1.55}
+  table{font-size:8.4px;border-radius:7px}
+  th,td{padding:3.5px 7px}
+  th{font-size:8px}
+  .step{gap:9px;margin:8px 0}
+  .no{flex:0 0 19px;height:19px;font-size:10.5px;border-radius:6px;box-shadow:none}
+  .k{font-size:8.4px;padding:0 5px;border-radius:4px}
+  figcaption{font-size:7.8px;padding:3.5px 7px}
+  figure{border-radius:7px;margin-top:5px}
+  .foot{font-size:7.4px;bottom:0;left:0;right:0;padding-top:5px}
+  @page{size:A4;margin:11mm}
 }
 </style>
 </head>
 <body>
 <div class="topbar">
-  <b>비급여 가격이 바뀌면 10일 안에 — 변경보고 따라 하기</b>
-  <span style="display:flex;gap:8px"><a href="./비급여_변경보고_따라하기_A4.pdf" style="background:#fff;color:#123b6d;border-radius:6px;padding:8px 16px;font-weight:700;font-size:13px;text-decoration:none">PDF 내려받기</a><button onclick="window.print()">인쇄</button></span>
+  <b>비급여 가격이 바뀌면 10일 안에<span class="sub">요양기관정보마당 · 가격공개자료 변경보고 따라 하기 · A4 4장</span></b>
+  <span class="grp"><a class="pri" href="./비급여_변경보고_따라하기_A4.pdf">PDF 내려받기</a><button onclick="window.print()">인쇄</button></span>
 </div>
 
 <!-- ───────── 1장 ───────── -->
-<section class="page">
+<section class="page"><span class="pg-no">1 / 4</span>
   <h1>비급여 가격이 바뀌면 10일 안에</h1>
   <div class="sub">요양기관정보마당 비급여보고시스템 · 가격공개자료 변경 따라 하기 · 확인일 2026-09-23</div>
 
@@ -100,7 +172,7 @@ th{background:#eef1f5;font-weight:700;white-space:nowrap}
 </section>
 
 <!-- ───────── 2장 ───────── -->
-<section class="page">
+<section class="page"><span class="pg-no">2 / 4</span>
   <h1>2단계 · 가격공개자료 화면 열기</h1>
   <div class="sub">바꿀 항목을 찾는 곳입니다</div>
 
@@ -134,7 +206,7 @@ th{background:#eef1f5;font-weight:700;white-space:nowrap}
 </section>
 
 <!-- ───────── 3장 ───────── -->
-<section class="page">
+<section class="page"><span class="pg-no">3 / 4</span>
   <h1>4단계 · 여러 개를 한 번에 바꾸기</h1>
   <div class="sub">항목이 많을 때는 엑셀이 빠릅니다</div>
 
@@ -162,7 +234,7 @@ th{background:#eef1f5;font-weight:700;white-space:nowrap}
 </section>
 
 <!-- ───────── 4장 ───────── -->
-<section class="page">
+<section class="page"><span class="pg-no">4 / 4</span>
   <h1>5단계 · 추가 · 삭제 · 제출</h1>
   <div class="sub">마무리 단계입니다</div>
 
