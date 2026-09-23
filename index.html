@@ -146,8 +146,12 @@ table{width:100%;border-collapse:separate;border-spacing:0;font-size:13.5px}
 th,td{padding:10px 12px;text-align:right;white-space:nowrap}
 th{
   background:#f7f8fa;font-size:11.5px;font-weight:700;color:var(--ink-3);letter-spacing:.01em;
-  border-bottom:1px solid var(--line);position:sticky;top:0;
+  border-bottom:1px solid var(--line);position:sticky;top:0;white-space:normal;line-height:1.35;
 }
+table.matrix{table-layout:fixed;width:100%}
+table.matrix th,table.matrix td{padding-left:6px;padding-right:6px}
+table.matrix th:first-child,table.matrix td:first-child{width:19%}
+table.matrix td{font-size:12.5px}
 td{border-bottom:1px solid var(--line-2)}
 tr:last-child td{border-bottom:0}
 tbody tr:hover td{background:#fafbfd}
@@ -203,6 +207,8 @@ tr.me td:first-child{box-shadow:inset 3px 0 0 #e8a33d}
   th,td{padding:2px 5px}
   th{font-size:7.8px;position:static}
   td.name{min-width:0}
+  table.matrix td{font-size:7.8px}
+  table.matrix th,table.matrix td{padding-left:3px;padding-right:3px}
   td.name small{font-size:7px}
   td.mine{font-size:8.6px}
   .callout{font-size:8.4px;padding:6px 9px;margin:6px 0;border-radius:7px}
@@ -307,7 +313,7 @@ const nm=(ic)=>{ const seg=ITEMS[ic][1].split('/').map(s=>s.trim()).filter(Boole
 const shortLabel=(ic)=>{ const seg=ITEMS[ic][1].split('/').map(s=>s.trim()).filter(Boolean);
   let s=seg.length>=3? seg.slice(-2).join(' ') : (seg.slice(-1)[0]||'');
   s=s.replace(/\[[^\]]*\]/g,'').replace(/프리필드시린지|프리필드주|주사|검사료/g,'').trim();
-  return s.length>22? s.slice(0,21)+'…' : s; };
+  return s.length>18? s.slice(0,17)+'…' : s; };
 
 el('go').onclick=()=>{
   const me=DATA.h[PICK], spec=me[3], cl=me[2];
@@ -389,8 +395,8 @@ el('go').onclick=()=>{
 
   const s3=`<section class="sheet">
     <div class="sheet-head"><span class="sheet-no">3</span><h3>${DATA.n} ${spec} 병원별 주요 항목 가격</h3></div>${meta}
-    ${topItems.length&&peerSorted.length?`<div class="tbl-wrap"><table>
-      <thead><tr><th class="l" style="min-width:140px">병원</th>${topItems.map(t=>`<th>${shortLabel(t.ic)}</th>`).join('')}</tr></thead><tbody>
+    ${topItems.length&&peerSorted.length?`<div class="tbl-wrap"><table class="matrix">
+      <thead><tr><th class="l">병원</th>${topItems.map(t=>`<th>${shortLabel(t.ic)}</th>`).join('')}</tr></thead><tbody>
       ${peerSorted.slice(0,38).map(x=>`<tr${x.i===PICK?' class="me"':''}>
         <td class="l name">${x.h[1]}${x.i===PICK?' <span class="badge b-mid" style="margin-left:4px">우리</span>':''}</td>
         ${topItems.map(t=>{const v=priceOf(x.i,t.ic);return `<td class="num${v==null?' dim':''}">${v==null?'미신고':W(v)}</td>`}).join('')}
