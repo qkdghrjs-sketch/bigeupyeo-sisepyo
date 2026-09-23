@@ -69,6 +69,38 @@ button,select,input{font-family:inherit;font-size:inherit;color:inherit}
   .st-v{font-size:20px}
 }
 
+.hero-cta{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.hero-cta a{
+  display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:10px;
+  font-size:13.5px;font-weight:700;transition:background .15s,transform .12s;
+}
+.hero-cta a:hover{transform:translateY(-1px)}
+.hero-cta .c1{background:#fff;color:#1d3a6e}
+.hero-cta .c2{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.hero-cta .c2:hover{background:rgba(255,255,255,.22)}
+
+/* 변경보고 안내 카드 */
+.guide{
+  display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);
+  padding:16px 18px;margin-bottom:20px;
+}
+.guide-ic{
+  width:44px;height:44px;border-radius:12px;background:var(--hi-bg);color:var(--hi);
+  display:flex;align-items:center;justify-content:center;font-size:21px;
+}
+.guide-t{font-size:15px;font-weight:800;letter-spacing:-.4px}
+.guide-t span{color:var(--hi)}
+.guide-d{font-size:12.8px;color:var(--ink-2);margin-top:2px}
+.guide-a{display:flex;gap:8px}
+.guide-a a{height:40px;display:inline-flex;align-items:center;padding:0 15px;border-radius:10px;font-size:13px;font-weight:700;white-space:nowrap}
+.guide-a .p{background:var(--ink);color:#fff}
+.guide-a .p:hover{background:#262b36}
+.guide-a .s{background:#f3f4f7;color:var(--ink-2)}
+.guide-a .s:hover{background:#e9ebf0}
+@media(max-width:720px){.guide{grid-template-columns:auto 1fr}.guide-a{grid-column:1/-1}.guide-a a{flex:1;justify-content:center}}
+.callout a.inl{font-weight:800;text-decoration:underline;text-underline-offset:3px}
+
 /* ───── 레이아웃 ───── */
 .wrap{max-width:1080px;margin:0 auto;padding:0 20px 80px}
 
@@ -199,7 +231,7 @@ tr.me td:first-child{box-shadow:inset 3px 0 0 #e8a33d}
 /* ───── 인쇄 ───── */
 @media print{
   body{background:#fff;font-size:10px}
-  .hero,.panel,.noprint,#loading,.actions{display:none!important}
+  .hero,.panel,.noprint,#loading,.actions,.guide,.inl-print-hide{display:none!important}
   .wrap{max-width:none;padding:0}
   .summary{display:none}
   .sheet{
@@ -245,11 +277,15 @@ tr.me td:first-child{box-shadow:inset 3px 0 0 #e8a33d}
       <div class="st"><div class="st-v"><span class="num">1,138,063</span><em>건</em></div><div class="st-l">공개 가격</div></div>
       <div class="st"><div class="st-v"><span class="num">728</span><em>개</em></div><div class="st-l">비급여 항목</div></div>
     </div>
+    <div class="hero-cta">
+      <a class="c1" href="#top-search" onclick="document.getElementById('sido').focus();return false;">우리 병원 조회하기</a>
+      <a class="c2" href="./manual.html">비급여 가격이 바뀌었다면 · 변경보고 따라 하기 →</a>
+    </div>
   </div>
 </header>
 
 <div class="wrap">
-  <div class="panel noprint">
+  <div class="panel noprint" id="top-search">
     <div class="fields">
       <div><label class="lab" for="sido">시도</label><select id="sido"></select></div>
       <div><label class="lab" for="sggu">시군구</label><select id="sggu"><option value="">시도를 먼저 선택</option></select></div>
@@ -260,6 +296,18 @@ tr.me td:first-child{box-shadow:inset 3px 0 0 #e8a33d}
       <div class="go"><button class="btn" id="go" disabled>조회하기</button></div>
     </div>
     <div class="hint" id="hint">시도 → 시군구를 고르면 그 지역 자료를 불러옵니다.</div>
+  </div>
+
+  <div class="guide noprint">
+    <div class="guide-ic">⏱</div>
+    <div>
+      <div class="guide-t">가격을 바꾸셨나요? <span>10일 안에</span> 보고해야 합니다</div>
+      <div class="guide-d">항목·금액이 바뀌면 변경일로부터 10일 이내 수시 보고 · 미보고 시 과태료 200만원 이하. 요양기관정보마당 실제 화면 12장으로 따라 하실 수 있습니다.</div>
+    </div>
+    <div class="guide-a">
+      <a class="p" href="./manual.html">따라 하기 보기</a>
+      <a class="s" href="./비급여_변경보고_따라하기_A4.pdf">A4 PDF</a>
+    </div>
   </div>
 
   <div id="loading"><span class="spin"></span>자료 불러오는 중…</div>
@@ -391,7 +439,8 @@ el('go').onclick=()=>{
       </tbody></table></div>${gaps.length>30?`<div class="legend">상위 30개만 표시했습니다. (전체 ${gaps.length}개)</div>`:''}`
     :'<div class="empty"><b>빠진 항목이 없습니다</b>동네 평균 수준으로 신고되어 있습니다.</div>'}
     <div class="callout red"><b>항목·비용이 바뀌면 변경일로부터 10일 이내에 수시 보고</b>해야 합니다. 보고하지 않거나 거짓으로 보고하면 「의료법」 제92조에 따라 200만원 이하 과태료가 부과됩니다.<br>
-      제출: 요양기관정보마당(medicare.nhis.or.kr) → 공동인증서 로그인 → 비급여보고 → 가격공개자료 · 문의 1577-1000(0번→7번) / 비급여관리실 033-736-2040</div>
+      제출: 요양기관정보마당(medicare.nhis.or.kr) → 공동인증서 로그인 → 비급여보고 → 가격공개자료 · 문의 1577-1000(0번→7번) / 비급여관리실 033-736-2040
+      <span class="inl-print-hide"><br>👉 빠진 항목을 추가하는 방법은 <a class="inl" href="./manual.html" target="_blank">변경보고 따라 하기</a> 4장을 보세요.</span></div>
     ${foot}</section>`;
 
   /* ── ③ 병원별 가격표 ── */
@@ -427,7 +476,7 @@ el('go').onclick=()=>{
           <span class="chip">공개 기준일 2026-09-03</span>
         </div>
       </div>
-      <button class="btn ghost" onclick="window.print()">인쇄 · PDF 저장</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn ghost" href="./manual.html" target="_blank" style="display:inline-flex;align-items:center">변경보고 따라 하기</a><button class="btn ghost" onclick="window.print()">인쇄 · PDF 저장</button></div>
     </div>
     <div class="kpis">
       <div class="kpi a"><span>비교한 신고 항목</span><b class="num">${rows1.length}<small style="font-size:14px;font-weight:600">개</small></b></div>
