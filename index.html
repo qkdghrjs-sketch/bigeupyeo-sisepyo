@@ -56,9 +56,18 @@ button,select,input{font-family:inherit;font-size:inherit;color:inherit}
 .dot{width:6px;height:6px;border-radius:50%;background:#7fe7b0;display:inline-block}
 .hero h1{font-size:28px;letter-spacing:-.9px;font-weight:800;line-height:1.2}
 .hero p{margin-top:8px;font-size:14px;color:rgba(255,255,255,.78);max-width:640px}
-.hero-stats{display:flex;gap:22px;margin-top:18px;flex-wrap:wrap}
-.hero-stats div{font-size:12.5px;color:rgba(255,255,255,.7)}
-.hero-stats b{display:block;font-size:19px;font-weight:800;color:#fff;letter-spacing:-.4px}
+.hero-stats{display:flex;margin-top:22px;flex-wrap:wrap;row-gap:14px}
+.hero-stats .st{padding:0 24px;border-left:1px solid rgba(255,255,255,.18)}
+.hero-stats .st:first-child{padding-left:0;border-left:0}
+.st-v{display:flex;align-items:baseline;gap:3px;color:#fff;font-weight:800;font-size:23px;letter-spacing:-.8px;line-height:1.15}
+.st-v em{font-style:normal;font-size:13px;font-weight:700;color:rgba(255,255,255,.65);letter-spacing:0}
+.st-l{font-size:12.5px;color:rgba(255,255,255,.6);margin-top:3px;letter-spacing:-.1px}
+@media(max-width:600px){
+  .hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:14px 0}
+  .hero-stats .st{padding:0 0 0 16px;border-left:1px solid rgba(255,255,255,.18)}
+  .hero-stats .st:nth-child(odd){padding-left:0;border-left:0}
+  .st-v{font-size:20px}
+}
 
 /* ───── 레이아웃 ───── */
 .wrap{max-width:1080px;margin:0 auto;padding:0 20px 80px}
@@ -231,10 +240,10 @@ tr.me td:first-child{box-shadow:inset 3px 0 0 #e8a33d}
     <h1>우리 동네 비급여 시세표</h1>
     <p>병원 이름만 넣으면 같은 지역·같은 진료과 안에서 우리 가격이 어디쯤인지, 빠뜨린 신고 항목은 없는지 A4 3장으로 정리해 드립니다.</p>
     <div class="hero-stats">
-      <div><b class="num">256</b>개 시군구</div>
-      <div><b class="num">72,236</b>개 기관</div>
-      <div><b class="num">1,138,063</b>건</div>
-      <div><b class="num">728</b>개 항목</div>
+      <div class="st"><div class="st-v"><span class="num">256</span><em>개</em></div><div class="st-l">시군구</div></div>
+      <div class="st"><div class="st-v"><span class="num">72,236</span><em>곳</em></div><div class="st-l">신고 기관</div></div>
+      <div class="st"><div class="st-v"><span class="num">1,138,063</span><em>건</em></div><div class="st-l">공개 가격</div></div>
+      <div class="st"><div class="st-v"><span class="num">728</span><em>개</em></div><div class="st-l">비급여 항목</div></div>
     </div>
   </div>
 </header>
