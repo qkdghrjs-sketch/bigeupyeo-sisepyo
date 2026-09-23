@@ -51,7 +51,7 @@ bigeupyeo-sisepyo/
 ├── 110001.json         (예: 서울 강남구 2,625곳 / 32,366건)
 ├── ...                 총 256개, 29.1MB
 ├── refresh.mjs         데이터 갱신 스크립트 (node refresh.mjs)
-├── 샘플_이움내과의원_덕양구.pdf
+├── 샘플_출력물.pdf
 └── README.md
 ```
 

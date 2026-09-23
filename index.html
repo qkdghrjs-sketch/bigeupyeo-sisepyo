@@ -4,96 +4,263 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>우리 동네 비급여 시세표</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
-:root{--line:#dcdfe4;--ink:#1a1d21;--sub:#5f6672;--bg:#f6f7f9;--lo:#1a7f4b;--mid:#b07d00;--hi:#c0392b;--brand:#123b6d}
-*{box-sizing:border-box}
-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Malgun Gothic","맑은 고딕",sans-serif;color:var(--ink);background:var(--bg);font-size:14px;line-height:1.55}
-header{background:var(--brand);color:#fff;padding:18px 20px}
-header h1{margin:0;font-size:19px;letter-spacing:-.4px}
-header p{margin:4px 0 0;font-size:12.5px;opacity:.85}
-.wrap{max-width:1000px;margin:0 auto;padding:18px 20px 60px}
-.panel{background:#fff;border:1px solid var(--line);border-radius:8px;padding:16px;margin-bottom:16px}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
-label{display:block;font-size:12px;color:var(--sub);margin-bottom:4px;font-weight:600}
-select,input{padding:9px 10px;border:1px solid var(--line);border-radius:6px;font-size:14px;font-family:inherit;background:#fff}
-select{min-width:150px}
-input{min-width:240px}
-button{padding:9px 18px;border:0;border-radius:6px;background:var(--brand);color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
-button:disabled{background:#9aa3b0;cursor:default}
-button.ghost{background:#fff;color:var(--brand);border:1px solid var(--brand)}
-.hint{font-size:12px;color:var(--sub);margin-top:8px}
+:root{
+  --bg:#f4f5f7;
+  --card:#fff;
+  --ink:#0f1115;
+  --ink-2:#4b5361;
+  --ink-3:#8a919e;
+  --line:#e6e8ec;
+  --line-2:#f0f1f4;
+  --accent:#2f5bff;
+  --accent-soft:#eaefff;
+  --lo:#0e8f55;      /* 저렴 */
+  --lo-bg:#e6f7ef;
+  --mid:#9a6a00;     /* 보통 */
+  --mid-bg:#fdf3e0;
+  --hi:#c8372b;      /* 비쌈 */
+  --hi-bg:#fdecea;
+  --radius:16px;
+  --sans:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  --shadow:0 1px 2px rgba(16,20,28,.04),0 8px 24px -12px rgba(16,20,28,.14);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--sans);background:var(--bg);color:var(--ink);
+  font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;
+  word-break:keep-all;overflow-wrap:break-word;
+}
+a{color:inherit;text-decoration:none}
+button,select,input{font-family:inherit;font-size:inherit;color:inherit}
+.num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+
+/* ───── 헤더 ───── */
+.hero{
+  background:linear-gradient(135deg,#131a2b 0%,#1d3a6e 62%,#2f5bff 140%);
+  color:#fff;padding:30px 22px 26px;position:relative;overflow:hidden;
+}
+.hero::after{
+  content:"";position:absolute;right:-70px;top:-90px;width:260px;height:260px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.22),rgba(255,255,255,0) 70%);
+}
+.hero-in{max-width:1080px;margin:0 auto;position:relative;z-index:1}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:7px;font-size:11.5px;letter-spacing:.06em;font-weight:600;
+  padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+  color:rgba(255,255,255,.92);margin-bottom:12px;
+}
+.dot{width:6px;height:6px;border-radius:50%;background:#7fe7b0;display:inline-block}
+.hero h1{font-size:28px;letter-spacing:-.9px;font-weight:800;line-height:1.2}
+.hero p{margin-top:8px;font-size:14px;color:rgba(255,255,255,.78);max-width:640px}
+.hero-stats{display:flex;gap:22px;margin-top:18px;flex-wrap:wrap}
+.hero-stats div{font-size:12.5px;color:rgba(255,255,255,.7)}
+.hero-stats b{display:block;font-size:19px;font-weight:800;color:#fff;letter-spacing:-.4px}
+
+/* ───── 레이아웃 ───── */
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px 80px}
+
+/* ───── 검색 패널 ───── */
+.panel{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:18px;margin:-26px 0 20px;position:relative;z-index:5;
+}
+.fields{display:grid;grid-template-columns:170px 220px 1fr auto;gap:12px;align-items:end}
+@media(max-width:820px){.fields{grid-template-columns:1fr 1fr}.fields .ac{grid-column:1/-1}.fields .go{grid-column:1/-1}}
+label.lab{display:block;font-size:12px;font-weight:700;color:var(--ink-3);margin-bottom:6px;letter-spacing:-.1px}
+select,input[type=text]{
+  width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:11px;background:#fbfbfc;
+  transition:border-color .15s,background .15s,box-shadow .15s;
+}
+select:focus,input:focus{outline:none;border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px var(--accent-soft)}
+select:disabled,input:disabled{background:#f3f4f6;color:var(--ink-3);cursor:not-allowed}
+.btn{
+  padding:11px 22px;border:0;border-radius:11px;background:var(--accent);color:#fff;font-weight:700;
+  cursor:pointer;transition:transform .12s,box-shadow .15s,background .15s;white-space:nowrap;
+  box-shadow:0 4px 14px -5px rgba(47,91,255,.6);
+}
+.btn:hover:not(:disabled){transform:translateY(-1px)}
+.btn:disabled{background:#c8ccd4;box-shadow:none;cursor:not-allowed}
+.btn.ghost{background:#fff;color:var(--accent);border:1px solid #c9d5ff;box-shadow:none}
+.btn.ghost:hover{background:var(--accent-soft)}
+.hint{margin-top:12px;font-size:12.5px;color:var(--ink-3);display:flex;align-items:center;gap:6px}
+.hint b{color:var(--ink-2);font-weight:700}
+
+/* 자동완성 */
 .ac{position:relative}
-.aclist{position:absolute;z-index:20;top:100%;left:0;right:0;background:#fff;border:1px solid var(--line);border-radius:6px;max-height:260px;overflow:auto;box-shadow:0 6px 18px rgba(0,0,0,.09)}
-.aclist div{padding:8px 10px;cursor:pointer;font-size:13.5px;border-bottom:1px solid #f0f1f3}
-.aclist div:hover{background:#eef3fa}
-.aclist small{color:var(--sub)}
-table{width:100%;border-collapse:collapse;font-size:12.5px}
-th,td{border:1px solid var(--line);padding:5px 7px;text-align:right;vertical-align:middle}
-th{background:#eef1f5;font-weight:700;text-align:center;font-size:11.5px}
-td.l,th.l{text-align:left}
-td.c{text-align:center}
-.sheet{background:#fff;border:1px solid var(--line);border-radius:8px;padding:20px;margin-bottom:16px}
-.sheet h2{margin:0 0 3px;font-size:16px;color:var(--brand)}
-.sheet .meta{font-size:11.5px;color:var(--sub);margin-bottom:12px}
-.tag{display:inline-block;padding:2px 7px;border-radius:99px;font-size:11px;font-weight:700;color:#fff;white-space:nowrap}
-.t-lo{background:var(--lo)}.t-mid{background:var(--mid)}.t-hi{background:var(--hi)}
-.bar{position:relative;height:7px;background:#e8eaee;border-radius:99px;min-width:70px}
-.bar i{position:absolute;top:-3px;width:3px;height:13px;background:var(--ink);border-radius:2px}
-.warn{background:#fff6f5;border:1px solid #f0c9c4;border-radius:6px;padding:11px 13px;font-size:12px;color:#8a2a1e;margin-top:14px}
-.note{background:#f2f6fc;border:1px solid #cfdcef;border-radius:6px;padding:11px 13px;font-size:12px;color:#1d3a62;margin-bottom:12px}
-.empty{padding:22px;text-align:center;color:var(--sub);font-size:13px}
-.legend{font-size:11.5px;color:var(--sub);margin-top:9px}
-.foot{font-size:10.5px;color:var(--sub);border-top:1px solid var(--line);margin-top:14px;padding-top:7px}
-#loading{display:none;padding:14px;text-align:center;color:var(--sub)}
+.aclist{
+  position:absolute;z-index:40;top:calc(100% + 6px);left:0;right:0;background:#fff;
+  border:1px solid var(--line);border-radius:12px;max-height:280px;overflow:auto;
+  box-shadow:0 12px 34px -10px rgba(16,20,28,.24);padding:5px;
+}
+.aclist div{padding:9px 11px;cursor:pointer;border-radius:8px;font-size:14px;transition:background .12s}
+.aclist div:hover{background:var(--accent-soft)}
+.aclist b{font-weight:700}
+.aclist small{color:var(--ink-3);font-size:12px;margin-left:6px}
+
+/* ───── 결과 요약 ───── */
+.summary{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:20px 22px;margin-bottom:18px;
+}
+.summary .top{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.summary h2{font-size:22px;font-weight:800;letter-spacing:-.6px}
+.summary .sub{font-size:13px;color:var(--ink-3);margin-top:5px}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.chip{font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:#f2f4f7;color:var(--ink-2)}
+.chip.a{background:var(--accent-soft);color:#1e40c8}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+@media(max-width:560px){.kpis{grid-template-columns:1fr}}
+.kpi{background:#fafbfc;border:1px solid var(--line-2);border-radius:12px;padding:13px 15px}
+.kpi span{font-size:12px;color:var(--ink-3);font-weight:600}
+.kpi b{display:block;font-size:24px;font-weight:800;letter-spacing:-.8px;margin-top:3px}
+.kpi.hi b{color:var(--hi)}.kpi.lo b{color:var(--lo)}.kpi.a b{color:var(--accent)}
+
+/* ───── 시트 ───── */
+.sheet{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:22px;margin-bottom:18px;
+}
+.sheet-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:3px}
+.sheet-no{
+  width:26px;height:26px;border-radius:9px;background:var(--ink);color:#fff;font-size:13px;font-weight:800;
+  display:inline-flex;align-items:center;justify-content:center;flex:0 0 26px;
+}
+.sheet h3{font-size:18px;font-weight:800;letter-spacing:-.5px}
+.sheet .meta{font-size:12px;color:var(--ink-3);margin-bottom:14px}
+.callout{
+  border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.6;margin:12px 0;
+  border:1px solid transparent;
+}
+.callout.blue{background:#f1f5ff;border-color:#dbe4ff;color:#1e3a8a}
+.callout.red{background:var(--hi-bg);border-color:#f6cdc8;color:#8f2b21}
+.callout.gray{background:#f7f8fa;border-color:var(--line-2);color:var(--ink-2)}
+.callout b{font-weight:800}
+
+/* 테이블 */
+.tbl-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--line-2)}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:13.5px}
+th,td{padding:10px 12px;text-align:right;white-space:nowrap}
+th{
+  background:#f7f8fa;font-size:11.5px;font-weight:700;color:var(--ink-3);letter-spacing:.01em;
+  border-bottom:1px solid var(--line);position:sticky;top:0;
+}
+td{border-bottom:1px solid var(--line-2)}
+tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:#fafbfd}
+.l{text-align:left!important}
+.c{text-align:center!important}
+td.name{white-space:normal;min-width:190px;font-weight:600;line-height:1.4}
+td.name small{display:block;font-weight:500;color:var(--ink-3);font-size:11.5px;margin-top:1px}
+td.mine{font-weight:800;font-size:14.5px}
+.dim{color:var(--ink-3);font-weight:500}
+tr.me td{background:#fffaf0!important}
+tr.me td:first-child{box-shadow:inset 3px 0 0 #e8a33d}
+
+/* 위치 바 */
+.meter{display:flex;align-items:center;gap:8px;justify-content:flex-end}
+.track{position:relative;width:84px;height:6px;border-radius:999px;background:linear-gradient(90deg,#c9ecdb,#fbe8c0,#f8cdc8)}
+.track i{position:absolute;top:-4px;width:4px;height:14px;border-radius:3px;background:var(--ink);box-shadow:0 0 0 2px #fff}
+.pcttxt{font-size:11.5px;color:var(--ink-3);min-width:46px;text-align:left}
+.badge{display:inline-block;font-size:11.5px;font-weight:800;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.b-lo{background:var(--lo-bg);color:var(--lo)}
+.b-mid{background:var(--mid-bg);color:var(--mid)}
+.b-hi{background:var(--hi-bg);color:var(--hi)}
+.share{display:inline-flex;align-items:center;gap:7px;justify-content:flex-end}
+.sbar{width:52px;height:5px;border-radius:999px;background:#eceef2;overflow:hidden}
+.sbar i{display:block;height:100%;background:var(--accent);border-radius:999px}
+
+.legend{font-size:11.5px;color:var(--ink-3);margin-top:10px;line-height:1.6}
+.empty{padding:34px 20px;text-align:center;color:var(--ink-3);font-size:14px}
+.empty b{display:block;color:var(--ink-2);font-size:15px;margin-bottom:4px}
+.foot{margin-top:16px;padding-top:12px;border-top:1px solid var(--line-2);font-size:11px;color:var(--ink-3);line-height:1.6}
+
+#loading{display:none;padding:26px;text-align:center;color:var(--ink-3);font-size:14px}
+.spin{width:16px;height:16px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;display:inline-block;animation:sp .7s linear infinite;vertical-align:-3px;margin-right:7px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.actions{display:flex;gap:9px;justify-content:flex-end;margin-bottom:14px}
+
+/* ───── 인쇄 ───── */
 @media print{
- body{background:#fff;font-size:10px}
- header,.panel,.noprint{display:none!important}
- .wrap{max-width:none;padding:0}
- .sheet{border:0;border-radius:0;padding:0;margin:0;page-break-after:always;page-break-inside:avoid}
- .sheet:last-child{page-break-after:auto}
- .sheet h2{font-size:13px;margin-bottom:2px}
- .sheet .meta{font-size:9px;margin-bottom:6px}
- table{font-size:8.2px}
- th,td{padding:1.2px 3px}
- th{font-size:7.8px}
- .bar{height:5px;min-width:46px}
- .bar i{height:10px;top:-2.5px}
- .tag{font-size:7.5px;padding:1px 4px}
- .note,.warn{font-size:8.5px;padding:6px 8px;margin:6px 0}
- .legend{font-size:8px;margin-top:5px}
- .foot{font-size:7.5px;margin-top:7px;padding-top:4px}
- @page{size:A4;margin:10mm}
+  body{background:#fff;font-size:10px}
+  .hero,.panel,.noprint,#loading,.actions{display:none!important}
+  .wrap{max-width:none;padding:0}
+  .summary{display:none}
+  .sheet{
+    border:0;border-radius:0;box-shadow:none;padding:0;margin:0;
+    page-break-after:always;page-break-inside:avoid;
+  }
+  .sheet:last-child{page-break-after:auto}
+  .sheet-head{margin-bottom:1px}
+  .sheet-no{width:18px;height:18px;flex:0 0 18px;font-size:10px;border-radius:6px}
+  .sheet h3{font-size:13.5px}
+  .sheet .meta{font-size:8.6px;margin-bottom:7px}
+  .tbl-wrap{border:1px solid #d9dce2;border-radius:6px;overflow:visible}
+  table{font-size:8.2px}
+  th,td{padding:2px 5px}
+  th{font-size:7.8px;position:static}
+  td.name{min-width:0}
+  td.name small{font-size:7px}
+  td.mine{font-size:8.6px}
+  .callout{font-size:8.4px;padding:6px 9px;margin:6px 0;border-radius:7px}
+  .badge{font-size:7.4px;padding:1.5px 6px}
+  .track{width:44px;height:4px}
+  .track i{height:10px;top:-3px;width:3px}
+  .pcttxt{font-size:7.4px;min-width:34px}
+  .sbar{width:34px}
+  .legend{font-size:7.6px;margin-top:5px}
+  .foot{font-size:7.2px;margin-top:8px;padding-top:5px}
+  @page{size:A4;margin:11mm}
 }
 </style>
 </head>
 <body>
-<header>
-  <h1>우리 동네 비급여 시세표</h1>
-  <p>심평원 비급여 진료비용 공개자료 기준 · 로그인 없음 · A4 3장 인쇄용</p>
+
+<header class="hero">
+  <div class="hero-in">
+    <span class="eyebrow"><span class="dot"></span>심평원 비급여 진료비용 공개자료 · 2026년 9월 3일 공개분</span>
+    <h1>우리 동네 비급여 시세표</h1>
+    <p>병원 이름만 넣으면 같은 지역·같은 진료과 안에서 우리 가격이 어디쯤인지, 빠뜨린 신고 항목은 없는지 A4 3장으로 정리해 드립니다.</p>
+    <div class="hero-stats">
+      <div><b class="num">256</b>개 시군구</div>
+      <div><b class="num">72,236</b>개 기관</div>
+      <div><b class="num">1,138,063</b>건</div>
+      <div><b class="num">728</b>개 항목</div>
+    </div>
+  </div>
 </header>
 
 <div class="wrap">
   <div class="panel noprint">
-    <div class="row">
-      <div><label>시도</label><select id="sido"></select></div>
-      <div><label>시군구</label><select id="sggu"><option value="">시도를 먼저 선택</option></select></div>
-      <div class="ac"><label>병원 이름</label><input id="q" placeholder="예: 이움내과의원" autocomplete="off" disabled><div class="aclist" id="aclist" style="display:none"></div></div>
-      <button id="go" disabled>조회</button>
-      <button id="print" class="ghost" style="display:none">인쇄 / PDF 저장</button>
+    <div class="fields">
+      <div><label class="lab" for="sido">시도</label><select id="sido"></select></div>
+      <div><label class="lab" for="sggu">시군구</label><select id="sggu"><option value="">시도를 먼저 선택</option></select></div>
+      <div class="ac"><label class="lab" for="q">병원 이름</label>
+        <input id="q" type="text" placeholder="예: 대웅의원" autocomplete="off" disabled>
+        <div class="aclist" id="aclist" style="display:none"></div>
+      </div>
+      <div class="go"><button class="btn" id="go" disabled>조회하기</button></div>
     </div>
     <div class="hint" id="hint">시도 → 시군구를 고르면 그 지역 자료를 불러옵니다.</div>
   </div>
-  <div id="loading">자료 불러오는 중…</div>
+
+  <div id="loading"><span class="spin"></span>자료 불러오는 중…</div>
   <div id="out"></div>
 </div>
 
 <script>
 const W=(n)=>n==null?'-':Number(n).toLocaleString('ko-KR');
-let ITEMS=null, SGGU=null, DATA=null, PICK=null;
 const el=(id)=>document.getElementById(id);
+let ITEMS=null,SGGU=null,DATA=null,PICK=null;
 
 (async()=>{
-  [ITEMS,SGGU]=await Promise.all([fetch('items.json').then(r=>r.json()),fetch('sggu.json').then(r=>r.json())]);
+  [ITEMS,SGGU]=await Promise.all([
+    fetch('items.json').then(r=>r.json()),
+    fetch('sggu.json').then(r=>r.json())
+  ]);
   const sidos=[...new Set(SGGU.map(s=>s.sido))];
   el('sido').innerHTML='<option value="">선택</option>'+sidos.map(s=>`<option>${s}</option>`).join('');
 })();
@@ -103,6 +270,7 @@ el('sido').onchange=()=>{
   const list=SGGU.filter(s=>s.sido===v).sort((a,b)=>a.n.localeCompare(b.n,'ko'));
   el('sggu').innerHTML='<option value="">선택</option>'+list.map(s=>`<option value="${s.c}">${s.n} (${W(s.hosp)}곳)</option>`).join('');
   el('q').disabled=true; el('q').value=''; el('go').disabled=true; DATA=null;
+  el('hint').textContent='시군구를 고르면 그 지역 자료를 불러옵니다.';
 };
 
 el('sggu').onchange=async()=>{
@@ -113,102 +281,148 @@ el('sggu').onchange=async()=>{
   for(const p of DATA.p){ if(!DATA.byH.has(p[0]))DATA.byH.set(p[0],[]); DATA.byH.get(p[0]).push(p); }
   el('loading').style.display='none';
   el('q').disabled=false; el('q').focus();
-  el('hint').textContent=`${DATA.n} 신고 기관 ${W(DATA.h.length)}곳 · 가격 ${W(DATA.p.length)}건을 불러왔습니다. 병원 이름을 입력하세요.`;
+  el('hint').innerHTML=`<b>${DATA.n}</b> 신고 기관 <b class="num">${W(DATA.h.length)}</b>곳 · 가격 <b class="num">${W(DATA.p.length)}</b>건을 불러왔습니다. 병원 이름을 입력하세요.`;
 };
 
 el('q').oninput=()=>{
   const v=el('q').value.trim(); PICK=null; el('go').disabled=true;
-  if(!DATA||v.length<1){el('aclist').style.display='none';return;}
+  if(!DATA||!v){el('aclist').style.display='none';return;}
   const hit=DATA.h.map((h,i)=>({h,i})).filter(x=>x.h[1].includes(v)).slice(0,30);
-  if(!hit.length){el('aclist').innerHTML='<div><small>이 지역 공개자료에 없는 이름입니다. (미제출이거나 이름이 다를 수 있음)</small></div>';el('aclist').style.display='block';return;}
-  el('aclist').innerHTML=hit.map(x=>`<div data-i="${x.i}"><b>${x.h[1]}</b> <small>${x.h[3]} · ${x.h[4]||''}</small></div>`).join('');
+  if(!hit.length){
+    el('aclist').innerHTML='<div style="cursor:default"><small>이 지역 공개자료에 없는 이름입니다. 미제출이거나 등록된 이름이 다를 수 있습니다.</small></div>';
+    el('aclist').style.display='block';return;
+  }
+  el('aclist').innerHTML=hit.map(x=>`<div data-i="${x.i}"><b>${x.h[1]}</b><small>${x.h[3]} · ${x.h[4]||''}</small></div>`).join('');
   el('aclist').style.display='block';
-  [...el('aclist').children].forEach(d=>{ if(!d.dataset.i)return; d.onclick=()=>{ PICK=+d.dataset.i; el('q').value=DATA.h[PICK][1]; el('aclist').style.display='none'; el('go').disabled=false; }; });
+  [...el('aclist').children].forEach(d=>{ if(!d.dataset.i)return;
+    d.onclick=()=>{PICK=+d.dataset.i; el('q').value=DATA.h[PICK][1]; el('aclist').style.display='none'; el('go').disabled=false;}; });
 };
+el('q').onkeydown=(e)=>{ if(e.key==='Enter'){ const f=document.querySelector('#aclist div[data-i]'); if(f&&!PICK){f.click();} if(PICK) el('go').click(); } };
 document.addEventListener('click',e=>{ if(!e.target.closest('.ac')) el('aclist').style.display='none'; });
-el('print').onclick=()=>window.print();
 
+const pct=(arr,v)=>{ let b=0; for(const x of arr) if(x<v) b++; return Math.round(b/arr.length*100); };
+const med=(arr)=>{ const s=[...arr].sort((a,b)=>a-b); const m=s.length>>1; return s.length%2?s[m]:Math.round((s[m-1]+s[m])/2); };
+const nm=(ic)=>{ const seg=ITEMS[ic][1].split('/').map(s=>s.trim()).filter(Boolean);
+  return { main: seg.length>1? seg.slice(1).join(' · ') : seg[0], cat: seg[0] }; };
 const shortLabel=(ic)=>{ const seg=ITEMS[ic][1].split('/').map(s=>s.trim()).filter(Boolean);
-  let s = seg.length>=3 ? seg.slice(-2).join(' ') : seg.slice(-1)[0]||'';
+  let s=seg.length>=3? seg.slice(-2).join(' ') : (seg.slice(-1)[0]||'');
   s=s.replace(/\[[^\]]*\]/g,'').replace(/프리필드시린지|프리필드주|주사|검사료/g,'').trim();
-  return s.length>24?s.slice(0,23)+'…':s; };
-const pct=(arr,v)=>{ const s=[...arr].sort((a,b)=>a-b); let below=0; for(const x of s) if(x<v) below++; return Math.round(below/s.length*100); };
-const med=(arr)=>{ const s=[...arr].sort((a,b)=>a-b); const m=Math.floor(s.length/2); return s.length%2?s[m]:Math.round((s[m-1]+s[m])/2); };
+  return s.length>22? s.slice(0,21)+'…' : s; };
 
 el('go').onclick=()=>{
   const me=DATA.h[PICK], spec=me[3], cl=me[2];
-  // 비교군: 같은 시군구 + 같은 진료과 + 같은 종별
   const peers=DATA.h.map((h,i)=>({h,i})).filter(x=>x.h[3]===spec&&x.h[2]===cl);
   const peerIdx=new Set(peers.map(x=>x.i));
-  // 항목별 비교군 가격 모음
   const byItem=new Map();
   for(const p of DATA.p){ if(!peerIdx.has(p[0]))continue;
     if(!byItem.has(p[1]))byItem.set(p[1],[]); byItem.get(p[1]).push({hi:p[0],min:p[2],max:p[3]}); }
   const mine=new Map((DATA.byH.get(PICK)||[]).map(p=>[p[1],p]));
   const today=new Date().toISOString().slice(0,10);
-  const head=`<div class="meta">${me[1]} · ${DATA.sido} ${DATA.n} · ${spec} · ${me[4]||''} ${me[5]?'· '+me[5]:''}<br>비교군: ${DATA.n} 내 같은 진료과 ${W(peers.length)}곳 · 공개자료 기준일 2026-09-03 · 확인일 ${today}</div>`;
-  const foot=`<div class="foot">자료: 건강보험심사평가원 비급여 진료비용 공개자료(2026년 9월 3일 공개분, 2026년 3월 진료분 기준) · 확인일 ${today}<br>원장님 내부 참고용입니다. 광고·홍보물에 다른 병원 가격을 인용하는 것은 의료법 위반이 될 수 있습니다.</div>`;
 
-  // ── 1장: 가격 위치표
+  const meta=`<div class="meta">${me[1]} · ${DATA.sido} ${DATA.n} · ${spec}${me[5]?' · '+me[5]:''} &nbsp;|&nbsp; 비교군 ${DATA.n} 내 같은 진료과 <span class="num">${W(peers.length)}</span>곳 · 공개 기준일 2026-09-03 · 확인일 ${today}</div>`;
+  const foot=`<div class="foot">자료: 건강보험심사평가원 비급여 진료비용 공개자료(2026년 9월 3일 공개분, 2026년 3월 진료분 기준) · 확인일 ${today}<br>
+    원장님 내부 참고용입니다. 광고·홍보물에 다른 병원 가격을 인용하는 것은 의료법 위반이 될 수 있습니다.</div>`;
+
+  /* ── ① 가격 위치표 ── */
   const rows1=[];
   for(const [ic,p] of mine){
-    const peerPrices=(byItem.get(ic)||[]).map(x=>x.min);
-    if(peerPrices.length<3) continue;
-    const myv=p[2], pc=pct(peerPrices,myv);
-    rows1.push({ic,myv,mymax:p[3],n:peerPrices.length,min:Math.min(...peerPrices),med:med(peerPrices),max:Math.max(...peerPrices),pc});
+    const ps=(byItem.get(ic)||[]).map(x=>x.min);
+    if(ps.length<3) continue;
+    rows1.push({ic,my:p[2],mymax:p[3],n:ps.length,min:Math.min(...ps),med:med(ps),max:Math.max(...ps),pc:pct(ps,p[2])});
   }
   rows1.sort((a,b)=>b.pc-a.pc);
-  const tag=(pc)=>pc>=70?'<span class="tag t-hi">비싼 편</span>':pc<=30?'<span class="tag t-lo">저렴한 편</span>':'<span class="tag t-mid">보통</span>';
-  const s1=`<div class="sheet"><h2>① 우리 병원 가격 위치표</h2>${head}
-   ${rows1.length?`<table><thead><tr><th class="l">항목</th><th>우리 가격</th><th>비교<br>기관수</th><th>최저</th><th>중앙</th><th>최고</th><th style="width:90px">위치</th><th>판정</th></tr></thead><tbody>
-   ${rows1.slice(0,34).map(r=>`<tr><td class="l">${ITEMS[r.ic][1].split('/').slice(1).join(' / ')||ITEMS[r.ic][1]}</td>
-     <td><b>${W(r.myv)}</b>${r.mymax!==r.myv?`<br><small>~${W(r.mymax)}</small>`:''}</td><td>${r.n}</td><td>${W(r.min)}</td><td>${W(r.med)}</td><td>${W(r.max)}</td>
-     <td><div class="bar"><i style="left:${Math.min(97,Math.max(0,r.pc))}%"></i></div><small>하위 ${r.pc}%</small></td>
-     <td class="c">${tag(r.pc)}</td></tr>`).join('')}
-   </tbody></table><div class="legend">‘위치’는 같은 지역·같은 진료과에서 우리보다 싼 곳의 비율입니다. 하위 0%에 가까울수록 동네에서 저렴한 편입니다. 비교 기관이 3곳 미만인 항목은 표에서 뺐습니다.${rows1.length>34?` 전체 ${rows1.length}개 중 상위 34개만 표시했습니다.`:''}</div>`
-   :'<div class="empty">비교 가능한 항목이 없습니다. (같은 진료과 기관이 너무 적거나 신고 항목이 겹치지 않음)</div>'}
-   ${foot}</div>`;
+  const nHi=rows1.filter(r=>r.pc>=70).length, nLo=rows1.filter(r=>r.pc<=30).length;
+  const badge=(pc)=>pc>=70?'<span class="badge b-hi">비싼 편</span>':pc<=30?'<span class="badge b-lo">저렴한 편</span>':'<span class="badge b-mid">보통</span>';
 
-  // ── 2장: 옆 병원은 있고 우리는 없는 항목
+  const s1=`<section class="sheet">
+    <div class="sheet-head"><span class="sheet-no">1</span><h3>우리 병원 가격 위치표</h3></div>${meta}
+    ${rows1.length?`<div class="tbl-wrap"><table>
+      <thead><tr>
+        <th class="l">항목</th><th>우리 가격</th><th>비교<br>기관</th><th>최저</th><th>중앙</th><th>최고</th><th class="c">동네 안 위치</th><th class="c">판정</th>
+      </tr></thead><tbody>
+      ${rows1.slice(0,34).map(r=>{const t=nm(r.ic);return `<tr>
+        <td class="name l">${t.main}<small>${t.cat}</small></td>
+        <td class="mine num">${W(r.my)}${r.mymax!==r.my?`<br><small class="dim num">~${W(r.mymax)}</small>`:''}</td>
+        <td class="num dim">${r.n}</td>
+        <td class="num dim">${W(r.min)}</td><td class="num">${W(r.med)}</td><td class="num dim">${W(r.max)}</td>
+        <td><div class="meter"><span class="pcttxt num">하위 ${r.pc}%</span><span class="track"><i style="left:${Math.min(96,Math.max(0,r.pc))}%"></i></span></div></td>
+        <td class="c">${badge(r.pc)}</td></tr>`}).join('')}
+      </tbody></table></div>
+      <div class="legend">‘동네 안 위치’는 같은 지역·같은 진료과에서 우리보다 싸게 받는 곳의 비율입니다. 0%에 가까울수록 동네에서 저렴한 편입니다. 비교 기관이 3곳 미만인 항목은 뺐습니다.${rows1.length>34?` 전체 ${rows1.length}개 중 상위 34개만 표시했습니다.`:''}</div>`
+    :'<div class="empty"><b>비교할 항목이 없습니다</b>같은 진료과 기관이 적거나 신고 항목이 겹치지 않습니다.</div>'}
+    ${foot}</section>`;
+
+  /* ── ② 누락 후보 ── */
   const gaps=[];
   for(const [ic,list] of byItem){
     if(mine.has(ic))continue;
-    const cnt=new Set(list.map(x=>x.hi)).size;
-    const share=cnt/peers.length;
+    const cnt=new Set(list.map(x=>x.hi)).size, share=cnt/peers.length;
     if(cnt<3||share<0.3)continue;
     const ps=list.map(x=>x.min);
     gaps.push({ic,cnt,share,min:Math.min(...ps),med:med(ps),max:Math.max(...ps)});
   }
   gaps.sort((a,b)=>b.share-a.share);
-  const s2=`<div class="sheet"><h2>② 옆 병원은 신고했는데 우리는 없는 항목</h2>${head}
-   <div class="note">같은 지역·같은 진료과 ${W(peers.length)}곳 중 <b>30% 이상</b>이 신고한 항목인데 우리 병원 공개자료에는 없는 것만 모았습니다. 실제로 하지 않는 시술이면 넘어가시면 되고, <b>하고 있는데 빠진 것이라면 신고 누락</b>입니다.</div>
-   ${gaps.length?`<table><thead><tr><th class="l">항목</th><th class="l" style="width:110px">분야</th><th>신고 기관</th><th>비율</th><th>최저</th><th>중앙</th><th>최고</th></tr></thead><tbody>
-   ${gaps.slice(0,30).map(g=>`<tr><td class="l">${ITEMS[g.ic][1].split('/').slice(1).join(' / ')||ITEMS[g.ic][1]}</td><td class="l">${ITEMS[g.ic][2]}</td>
-     <td>${g.cnt} / ${peers.length}</td><td>${Math.round(g.share*100)}%</td><td>${W(g.min)}</td><td>${W(g.med)}</td><td>${W(g.max)}</td></tr>`).join('')}
-   </tbody></table>${gaps.length>30?`<div class="legend">상위 30개만 표시했습니다. (전체 ${gaps.length}개)</div>`:''}`
-   :'<div class="empty">빠진 항목이 없습니다. 동네 평균 수준으로 신고되어 있습니다.</div>'}
-   <div class="warn"><b>항목·비용이 바뀌면 변경일로부터 10일 이내에 수시 보고</b>해야 합니다. 보고하지 않거나 거짓으로 보고하면 「의료법」 제92조에 따라 200만원 이하 과태료가 부과됩니다.<br>제출: 요양기관정보마당(medicare.nhis.or.kr) → 공동인증서 로그인 → 비급여보고 → 가격공개자료 · 문의 1577-1000(0번→7번) / 비급여관리실 033-736-2040</div>
-   ${foot}</div>`;
 
-  // ── 3장: 기관별 가격표 (비교군 상위 항목)
-  // ③ 표에는 제증명수수료를 빼고, 실제 진료·검사·접종 항목만 (원장님이 돈으로 체감하는 항목)
+  const s2=`<section class="sheet">
+    <div class="sheet-head"><span class="sheet-no">2</span><h3>옆 병원은 신고했는데 우리는 없는 항목</h3></div>${meta}
+    <div class="callout blue">같은 지역·같은 진료과 <b class="num">${W(peers.length)}</b>곳 중 <b>30% 이상</b>이 신고한 항목인데 우리 병원 공개자료에는 없는 것만 모았습니다.
+      실제로 하지 않는 시술이면 넘어가시면 되고, <b>하고 있는데 빠진 것이라면 신고 누락</b>입니다.</div>
+    ${gaps.length?`<div class="tbl-wrap"><table>
+      <thead><tr><th class="l">항목</th><th class="c">신고 기관</th><th>최저</th><th>중앙</th><th>최고</th></tr></thead><tbody>
+      ${gaps.slice(0,30).map(g=>{const t=nm(g.ic);return `<tr>
+        <td class="name l">${t.main}<small>${t.cat}</small></td>
+        <td><div class="share"><span class="pcttxt num">${g.cnt}/${peers.length} · ${Math.round(g.share*100)}%</span><span class="sbar"><i style="width:${Math.round(g.share*100)}%"></i></span></div></td>
+        <td class="num dim">${W(g.min)}</td><td class="num">${W(g.med)}</td><td class="num dim">${W(g.max)}</td></tr>`}).join('')}
+      </tbody></table></div>${gaps.length>30?`<div class="legend">상위 30개만 표시했습니다. (전체 ${gaps.length}개)</div>`:''}`
+    :'<div class="empty"><b>빠진 항목이 없습니다</b>동네 평균 수준으로 신고되어 있습니다.</div>'}
+    <div class="callout red"><b>항목·비용이 바뀌면 변경일로부터 10일 이내에 수시 보고</b>해야 합니다. 보고하지 않거나 거짓으로 보고하면 「의료법」 제92조에 따라 200만원 이하 과태료가 부과됩니다.<br>
+      제출: 요양기관정보마당(medicare.nhis.or.kr) → 공동인증서 로그인 → 비급여보고 → 가격공개자료 · 문의 1577-1000(0번→7번) / 비급여관리실 033-736-2040</div>
+    ${foot}</section>`;
+
+  /* ── ③ 병원별 가격표 ── */
   const topItems=[...byItem.entries()]
     .filter(([ic])=>!/제증명|증명서|진료기록/.test(ITEMS[ic][2]+ITEMS[ic][1]))
     .map(([ic,l])=>({ic,cnt:new Set(l.map(x=>x.hi)).size,amt:med(l.map(x=>x.min))}))
     .sort((a,b)=>b.cnt-a.cnt||b.amt-a.amt).slice(0,8);
   const peerSorted=[...peers].sort((a,b)=>a.i===PICK?-1:b.i===PICK?1:a.h[1].localeCompare(b.h[1],'ko'));
   const priceOf=(hi,ic)=>{ const r=(DATA.byH.get(hi)||[]).find(p=>p[1]===ic); return r?r[2]:null; };
-  const s3=`<div class="sheet"><h2>③ ${DATA.n} ${spec} 병원별 주요 항목 가격</h2>${head}
-   ${topItems.length&&peerSorted.length?`<table><thead><tr><th class="l" style="width:130px">병원</th>${topItems.map(t=>`<th>${shortLabel(t.ic)}</th>`).join('')}</tr></thead><tbody>
-   ${peerSorted.slice(0,38).map(x=>`<tr${x.i===PICK?' style="background:#fff8e1;font-weight:700"':''}><td class="l">${x.h[1]}${x.i===PICK?' ◀ 우리':''}</td>
-     ${topItems.map(t=>{const v=priceOf(x.i,t.ic);return `<td>${v==null?'<span style="color:#b6bcc5">미신고</span>':W(v)}</td>`;}).join('')}</tr>`).join('')}
-   </tbody></table><div class="legend">‘미신고’는 그 병원이 해당 항목을 공개자료에 올리지 않았다는 뜻입니다(실제로 안 하거나, 신고를 빠뜨렸거나). 기관이 많으면 38곳까지만 표시합니다. 제증명수수료는 빼고 진료·검사·접종 항목만 담았습니다. 항목명은 줄여서 표기했습니다.</div>`
-   :'<div class="empty">표시할 비교 기관이 없습니다.</div>'}
-   ${foot}</div>`;
 
-  el('out').innerHTML=s1+s2+s3;
-  el('print').style.display='inline-block';
-  window.scrollTo({top:el('out').offsetTop-20,behavior:'smooth'});
+  const s3=`<section class="sheet">
+    <div class="sheet-head"><span class="sheet-no">3</span><h3>${DATA.n} ${spec} 병원별 주요 항목 가격</h3></div>${meta}
+    ${topItems.length&&peerSorted.length?`<div class="tbl-wrap"><table>
+      <thead><tr><th class="l" style="min-width:140px">병원</th>${topItems.map(t=>`<th>${shortLabel(t.ic)}</th>`).join('')}</tr></thead><tbody>
+      ${peerSorted.slice(0,38).map(x=>`<tr${x.i===PICK?' class="me"':''}>
+        <td class="l name">${x.h[1]}${x.i===PICK?' <span class="badge b-mid" style="margin-left:4px">우리</span>':''}</td>
+        ${topItems.map(t=>{const v=priceOf(x.i,t.ic);return `<td class="num${v==null?' dim':''}">${v==null?'미신고':W(v)}</td>`}).join('')}
+      </tr>`).join('')}
+      </tbody></table></div>
+      <div class="legend">‘미신고’는 그 병원이 해당 항목을 공개자료에 올리지 않았다는 뜻입니다(실제로 안 하거나, 신고를 빠뜨렸거나). 기관이 많으면 38곳까지 표시하고, 제증명수수료는 빼고 진료·검사·접종 항목만 담았습니다. 항목명은 줄여서 표기했습니다.</div>`
+    :'<div class="empty"><b>표시할 비교 기관이 없습니다</b></div>'}
+    ${foot}</section>`;
+
+  const summary=`<section class="summary noprint">
+    <div class="top">
+      <div>
+        <h2>${me[1]}</h2>
+        <div class="sub">${me[4]||''}${me[5]?' · '+me[5]:''}</div>
+        <div class="chips">
+          <span class="chip a">${spec}</span>
+          <span class="chip">${DATA.sido} ${DATA.n}</span>
+          <span class="chip">비교군 ${W(peers.length)}곳</span>
+          <span class="chip">공개 기준일 2026-09-03</span>
+        </div>
+      </div>
+      <button class="btn ghost" onclick="window.print()">인쇄 · PDF 저장</button>
+    </div>
+    <div class="kpis">
+      <div class="kpi a"><span>비교한 신고 항목</span><b class="num">${rows1.length}<small style="font-size:14px;font-weight:600">개</small></b></div>
+      <div class="kpi hi"><span>동네보다 비싼 편</span><b class="num">${nHi}<small style="font-size:14px;font-weight:600">개</small></b></div>
+      <div class="kpi lo"><span>신고 누락 후보</span><b class="num">${gaps.length}<small style="font-size:14px;font-weight:600">개</small></b></div>
+    </div>
+  </section>`;
+
+  el('out').innerHTML=summary+s1+s2+s3;
+  el('out').scrollIntoView({behavior:'smooth',block:'start'});
 };
 </script>
 </body>
